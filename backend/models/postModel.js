@@ -1,15 +1,13 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const postSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true,
-    maxLength: 50,
   },
   body: {
     type: String,
     required: true,
-    maxLength: 50,
   },
   likes: [
     {
@@ -35,4 +33,5 @@ const postSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("Post", postSchema);
+const Post = mongoose.model("Post", postSchema);
+export default Post;

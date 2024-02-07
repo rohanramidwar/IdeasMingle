@@ -1,41 +1,42 @@
-const Post = require("../models/postModel");
+import Post from "../models/postModel.js";
 
-exports.createPost = async (req, res) => {
+export const createPost = async (req, res) => {
   try {
     const { title, body } = req.body;
-    const post = await Post.create({ title, body });
+    const post = new Post({ title, body });
+    const savedPost = await post.save();
 
     res.status(200).json({
       success: true,
-      data: post,
-      message: "Post Created SUCCESSFULLY !",
+      data: savedPost,
+      message: "post created successfully",
     });
   } catch (err) {
     console.error(err);
     console.log(err);
     res.status(500).json({
       success: false,
-      data: "ERROR while creating post!",
+      data: "error while creating post",
       message: err.message,
     });
   }
 };
 
-exports.getAllPosts = async (req, res) => {
+export const getAllPosts = async (req, res) => {
   try {
     const posts = await Post.find({}).populate("comments").exec();
 
     res.status(200).json({
       success: true,
       data: posts,
-      message: "Fetched all posts Sucessfully !",
+      message: "all posts retrieved successfully.",
     });
   } catch (err) {
     console.error(err);
     console.log(err);
     res.status(500).json({
       success: false,
-      data: "ERROR while fetching posts!",
+      data: "error while fetching posts",
       message: err.message,
     });
   }

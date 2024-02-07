@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
-
-require("dotenv").config();
+import mongoose from "mongoose";
+import { config } from "dotenv";
+config();
 
 const dbConnect = () => {
   mongoose
@@ -8,12 +8,12 @@ const dbConnect = () => {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     })
-    .then(() => console.log("DB is connected Successfully !"))
+    .then(() => console.log("db is connected successfully"))
     .catch((err) => {
-      console.log("Issue in DB CONNECTION");
+      console.log("error in db connection");
       console.error(err.message);
       process.exit(1);
     });
 };
 
-module.exports = dbConnect;
+export default dbConnect;

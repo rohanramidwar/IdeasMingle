@@ -1,57 +1,58 @@
-//import models
-const Post = require("../models/postModel");
-const Like = require("../models/likeModel");
+import Like from "../models/likeModel.js";
+import Post from "../models/postModel.js";
 
-//business logic
-exports.likePost = async (req, res) => {
+export const likePost = async (req, res) => {
   try {
-    //fetch
     const { post, user } = req.body;
-    //creates obj
-    let like = new Like({ post, user });
-    //save in db
+    const like = new Like({ post, user });
     const savedLike = await like.save();
-    //update the number of likes on that post
+
+    //update post
     const updatedPost = await Post.findByIdAndUpdate(
       post,
       { $push: { likes: savedLike._id } },
       { new: true }
     );
 
-    res.json({
-      post: updatedPost,
+    res.status(200).json({
+      success: true,
+      data: updatedPost,
+      message: "liked post successfully",
     });
   } catch (err) {
     console.error(err);
     console.log(err);
     res.status(500).json({
       success: false,
-      data: "ERROR while liking post!",
+      data: "error while liking post",
       message: err.message,
     });
   }
 };
 
-exports.unlikePost = async (req, res) => {
+export const dislikePost = async (req, res) => {
   try {
     const { post, like } = req.body;
-    //find and delete from like collection
-    const deleteLike = await Like.findOneAndDelete({ post: post, _id: like });
-    //update post collection
+    //delete like from like collection
+    const dislike = await Like.findOneAndDelete({ post: post, _id: like });
+    //update post
     const updatedPost = await Post.findByIdAndUpdate(
       post,
-      { $pull: { likes: deleteLike._id } },
+      { $pull: { likes: dislike._id } },
       { new: true }
     );
-    res.json({
-      post: updatedPost,
+
+    res.status(200).json({
+      success: true,
+      data: updatedPost,
+      message: "disliked post successfully",
     });
   } catch (err) {
     console.error(err);
     console.log(err);
     res.status(500).json({
       success: false,
-      data: "ERROR while unliking post!",
+      data: "error while disliking post",
       message: err.message,
     });
   }
